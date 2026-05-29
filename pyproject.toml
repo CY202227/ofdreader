@@ -37,8 +37,9 @@ testpaths = ["tests"]
 pythonpath = ["src"]
 
 [tool.pyright]
-pythonVersion = "3.10"
+include = ["src", "tests", "examples", "test.py"]
 extraPaths = ["src"]
+pythonVersion = "3.10"
 
 [tool.basedpyright]
 extraPaths = ["src"]

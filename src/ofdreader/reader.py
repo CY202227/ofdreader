@@ -5,6 +5,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 from typing import BinaryIO
+from xml.etree.ElementTree import Element
 
 from ofdreader._constants import OFD_XML_ENTRY
 from ofdreader._package import OfdPackage, doc_dir_for, normalize_zip_path, resolve_path
@@ -143,18 +144,87 @@ def _parse_document(document_root, doc_root_path: str) -> DocumentInfo:
     return info
 
 
-def extract_text_from_content_xml(content_root, *, skip_whitespace: bool = True) -> str:
-    """Extract plain text from a Page Content.xml root element."""
-    chunks: list[str] = []
-    for text_obj in iter_descendants(content_root, "TextObject"):
-        for text_code in iter_descendants(text_obj, "TextCode"):
-            text = text_content(text_code)
-            if not text:
-                continue
-            if skip_whitespace and _WHITESPACE_ONLY.match(text):
-                continue
-            chunks.append(text)
-    return "".join(chunks)
+def _text_object_plain_text(
+    text_obj: Element,
+    *,
+    skip_whitespace: bool,
+) -> str:
+    parts: list[str] = []
+    for text_code in iter_descendants(text_obj, "TextCode"):
+        text = text_content(text_code)
+        if not text:
+            continue
+        if skip_whitespace and _WHITESPACE_ONLY.match(text):
+            continue
+        parts.append(text)
+    return "".join(parts)
+
+
+def _boundary_top_left(text_obj: Element) -> tuple[float | None, float | None]:
+    box = _parse_box(get_attr(text_obj, "Boundary"))
+    if box is None:
+        return None, None
+    return box[0], box[1]
+
+
+# Typical wrapped line spacing ~11mm; paragraph gaps ~16mm+ in converted OFD.
+_DEFAULT_PARAGRAPH_GAP = 14.0
+
+
+def extract_text_from_content_xml(
+    content_root,
+    *,
+    skip_whitespace: bool = True,
+    preserve_layout: bool = True,
+    paragraph_gap_tolerance: float = _DEFAULT_PARAGRAPH_GAP,
+    line_tolerance: float | None = None,
+) -> str:
+    """Extract plain text from a Page Content.xml root element.
+
+    When preserve_layout is True (default), joins visual line wraps into one
+    paragraph and inserts newlines only when vertical spacing indicates a new
+    paragraph (Boundary Y gap larger than paragraph_gap_tolerance).
+    """
+    if line_tolerance is not None:
+        paragraph_gap_tolerance = line_tolerance
+
+    text_objects = list(iter_descendants(content_root, "TextObject"))
+    if not preserve_layout:
+        chunks: list[str] = []
+        for text_obj in text_objects:
+            block = _text_object_plain_text(
+                text_obj, skip_whitespace=skip_whitespace
+            )
+            if block:
+                chunks.append(block)
+        return "".join(chunks)
+
+    paragraphs: list[str] = []
+    current_parts: list[str] = []
+    last_y: float | None = None
+
+    for text_obj in text_objects:
+        _, y = _boundary_top_left(text_obj)
+        block = _text_object_plain_text(text_obj, skip_whitespace=skip_whitespace)
+
+        if (
+            last_y is not None
+            and y is not None
+            and y > last_y + paragraph_gap_tolerance
+        ):
+            if current_parts:
+                paragraphs.append("".join(current_parts))
+                current_parts = []
+
+        if block:
+            current_parts.append(block)
+
+        if y is not None:
+            last_y = y
+
+    if current_parts:
+        paragraphs.append("".join(current_parts))
+    return "\n".join(paragraphs)
 
 
 class OfdPage:
@@ -192,10 +262,23 @@ class OfdPage:
             self._content_root = root
         return self._content_root
 
-    def extract_text(self, *, skip_whitespace: bool = True) -> str:
-        """Return concatenated text from all TextObject elements on this page."""
+    def extract_text(
+        self,
+        *,
+        skip_whitespace: bool = True,
+        preserve_layout: bool = True,
+        paragraph_gap_tolerance: float = _DEFAULT_PARAGRAPH_GAP,
+        line_tolerance: float | None = None,
+    ) -> str:
+        """Return text from all TextObject elements on this page."""
         root = self._load_content()
-        return extract_text_from_content_xml(root, skip_whitespace=skip_whitespace)
+        return extract_text_from_content_xml(
+            root,
+            skip_whitespace=skip_whitespace,
+            preserve_layout=preserve_layout,
+            paragraph_gap_tolerance=paragraph_gap_tolerance,
+            line_tolerance=line_tolerance,
+        )
 
 
 class OfdReader:
@@ -295,10 +378,18 @@ class OfdReader:
         *,
         page_separator: str = "\n",
         skip_whitespace: bool = True,
+        preserve_layout: bool = True,
+        paragraph_gap_tolerance: float = _DEFAULT_PARAGRAPH_GAP,
+        line_tolerance: float | None = None,
     ) -> str:
         """Extract text from all pages."""
         parts = [
-            page.extract_text(skip_whitespace=skip_whitespace)
+            page.extract_text(
+                skip_whitespace=skip_whitespace,
+                preserve_layout=preserve_layout,
+                paragraph_gap_tolerance=paragraph_gap_tolerance,
+                line_tolerance=line_tolerance,
+            )
             for page in self.pages
         ]
         return page_separator.join(parts)

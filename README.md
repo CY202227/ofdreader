@@ -25,7 +25,8 @@ print(reader.metadata["Author"])
 print(reader.page_count)
 
 text = reader.pages[0].extract_text()
-full_text = reader.extract_text()
+full_text = reader.extract_text()  # keeps paragraph breaks, joins line wraps
+# flat = reader.extract_text(preserve_layout=False)  # single continuous string
 
 writer = OfdWriter()
 writer.append(reader)
@@ -46,7 +47,7 @@ writer.write("merged.ofd")
 
 - Open `.ofd` packages (ZIP) from path, bytes, or file-like objects
 - Read `DocInfo` metadata, page list, outlines
-- Extract plain text from `TextObject` / `TextCode`
+- Extract plain text from `TextObject` / `TextCode` (default keeps paragraph breaks, joins wrapped lines)
 - Clone packages, update metadata, append pages across documents
 
 Not included yet: rendering, PDF export, digital signatures, annotations, creating new glyph-mapped text.

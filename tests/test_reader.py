@@ -35,6 +35,23 @@ def test_extract_text_page0(sample_ofd_path: Path) -> None:
     text = reader.pages[0].extract_text()
     assert "弘扬优良传统" in text
     assert "陈吉宁" in text
+    assert "\n" in text
+
+
+def test_extract_text_flat(sample_ofd_path: Path) -> None:
+    reader = OfdReader(sample_ofd_path)
+    flat = reader.pages[0].extract_text(preserve_layout=False)
+    assert "\n" not in flat
+    assert "弘扬优良传统" in flat
+
+
+def test_extract_text_paragraph_wrap_joined(sample_ofd_path: Path) -> None:
+    reader = OfdReader(sample_ofd_path)
+    text = reader.pages[0].extract_text()
+    joined = text.replace("\n", "")
+    assert "指出，要深入学习贯彻习近平总书记关于宗教工作的重要论述" in joined
+    assert "要深入学习贯彻" in joined
+    assert text.count("\n") < 15
 
 
 def test_extract_text_full(sample_ofd_path: Path) -> None:

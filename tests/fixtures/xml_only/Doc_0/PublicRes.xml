@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ofd:Res xmlns:ofd="http://www.ofdspec.org/2016" BaseLoc="Res"><ofd:Fonts><ofd:Font ID="4" FontName="MicrosoftYaHei-Bold" Bold="true"><ofd:FontFile>font_4_4.ttf</ofd:FontFile></ofd:Font><ofd:Font ID="58" FontName="MicrosoftYaHei"><ofd:FontFile>font_58_58.ttf</ofd:FontFile></ofd:Font><ofd:Font ID="63" FontName="ArialMT"><ofd:FontFile>font_63_63.ttf</ofd:FontFile></ofd:Font></ofd:Fonts></ofd:Res>

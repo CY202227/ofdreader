@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+dist/
+build/
+*.egg-info/
+.eggs/
+*.ofd
+!tests/fixtures/sample.ofd
+
+弘扬优良传统测试副本
+弘扬优良传统测试副本.ofd
+弘扬优良传统测试副本.zip
+test.md
+test.py

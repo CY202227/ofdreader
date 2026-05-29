@@ -1,4 +1,4 @@
-"""OfdReader: PyPDF2-style read API for OFD documents."""
+"""OfdReader: read API for OFD documents."""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""Data extraction, analysis, conversion & manipulation of OFD documents."""
+"""Data extraction, analysis, conversion & manipulation of OFD (China GB/T 33190) documents."""
 
 from ofdreader.exceptions import (
     OfdError,

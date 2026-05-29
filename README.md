@@ -1,6 +1,6 @@
 # ofdreader
 
-**ofdreader** is a Python library for data extraction, analysis, conversion & manipulation of [OFD](https://www.ofdspec.org/) (and other) documents (GB/T 33190—2016). It provides a **PyPDF2-like** read/write API.
+**ofdreader** is a Python library for data extraction, analysis, conversion & manipulation of OFD (开放式版式文档，中国国家标准 GB/T 33190—2016，国内电子公文与版式归档采用的固定版式文件格式) documents.
 
 ## Install
 

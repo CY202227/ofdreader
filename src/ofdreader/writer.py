@@ -1,4 +1,4 @@
-"""OfdWriter: PyPDF2-style write API for OFD documents."""
+"""OfdWriter: write API for OFD documents."""
 
 from __future__ import annotations
 

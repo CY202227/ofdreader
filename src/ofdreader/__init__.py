@@ -1,4 +1,4 @@
-"""Read and write OFD (GB/T 33190) documents."""
+"""Data extraction, analysis, conversion & manipulation of OFD documents."""
 
 from ofdreader.exceptions import (
     OfdError,

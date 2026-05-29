@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "ofdreader"
 version = "0.1.0"
-description = "Read and write OFD (GB/T 33190) documents with a PyPDF2-like API."
+description = "A Python library for data extraction, analysis, conversion & manipulation of OFD (and other) documents."
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.10"

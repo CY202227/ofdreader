@@ -1,6 +1,6 @@
 # ofdreader
 
-Read and write [OFD](https://www.ofdspec.org/) documents (GB/T 33190—2016) with a **PyPDF2-like** API.
+**ofdreader** is a Python library for data extraction, analysis, conversion & manipulation of [OFD](https://www.ofdspec.org/) (and other) documents (GB/T 33190—2016). It provides a **PyPDF2-like** read/write API.
 
 ## Install
 

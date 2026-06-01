@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ofdreader"
-version = "0.1.0"
+version = "0.0.1"
 description = "A Python library for data extraction, analysis, conversion & manipulation of OFD (China national open fixed-layout document standard GB/T 33190) documents."
 readme = "README.md"
 license = "MIT"

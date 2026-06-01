@@ -20,7 +20,7 @@ pytest
 ## Quick start
 
 ```python
-from ofdreader import OfdReader, OfdWriter
+from ofdreader import OfdReader, OfdWriter, ofd_to_pdf, ofd_to_pdf_layout
 
 reader = OfdReader("document.ofd")
 print(reader.metadata["Author"])
@@ -34,6 +34,12 @@ writer = OfdWriter()
 writer.append(reader)
 writer.metadata["Author"] = "Updated Author"
 writer.write("copy.ofd")
+
+# Export current extracted paragraphs to a simple PDF
+ofd_to_pdf("document.ofd", "document.txt-layout.pdf")
+
+# Export with approximate original fonts/layout from OFD XML
+ofd_to_pdf_layout("document.ofd", "document.layout.pdf")
 ```
 
 Merge an extra page from another file:
@@ -51,8 +57,11 @@ writer.write("merged.ofd")
 - Read `DocInfo` metadata, page list, outlines
 - Extract plain text from `TextObject` / `TextCode` (default keeps paragraph breaks, joins wrapped lines)
 - Clone packages, update metadata, append pages across documents
+- Export extracted text paragraphs to PDF (`ofd_to_pdf`, optional `reportlab`)
+- Export approximate original layout PDF (`ofd_to_pdf_layout`)
 
-Not included yet: rendering, PDF export, digital signatures, annotations, creating new glyph-mapped text.
+Not included yet: full layout rendering, digital signatures, annotations, creating
+new glyph-mapped text.
 
 ## Related projects
 

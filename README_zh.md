@@ -20,7 +20,7 @@ pytest
 ## 快速开始
 
 ```python
-from ofdreader import OfdReader, OfdWriter
+from ofdreader import OfdReader, OfdWriter, ofd_to_pdf, ofd_to_pdf_layout
 
 reader = OfdReader("document.ofd")
 print(reader.metadata["Author"])
@@ -34,6 +34,12 @@ writer = OfdWriter()
 writer.append(reader)
 writer.metadata["Author"] = "Updated Author"
 writer.write("copy.ofd")
+
+# 将当前提取的段落文本导出为 PDF
+ofd_to_pdf("document.ofd", "document.txt-layout.pdf")
+
+# 按 OFD XML 尽可能保留原字体与版式导出
+ofd_to_pdf_layout("document.ofd", "document.layout.pdf")
 ```
 
 从另一个文件合并额外页面：
@@ -51,8 +57,10 @@ writer.write("merged.ofd")
 - 读取 `DocInfo` 元数据、页面列表、大纲
 - 从 `TextObject` / `TextCode` 提取纯文本（默认保留段落换行，合并行内折行）
 - 克隆包、更新元数据、跨文档追加页面
+- 将提取后的段落文本导出为 PDF（`ofd_to_pdf`，可选依赖 `reportlab`）
+- 按原版式近似导出 PDF（`ofd_to_pdf_layout`）
 
-尚未支持：渲染、PDF 导出、数字签名、批注、创建新的字形映射文本。
+尚未支持：完整版面渲染、数字签名、批注、创建新的字形映射文本。
 
 ## 相关项目
 

@@ -25,6 +25,7 @@ classifiers = [
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0"]
+pdf = ["reportlab>=4.0"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/ofdreader"]

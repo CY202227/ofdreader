@@ -6,6 +6,7 @@ from ofdreader.exceptions import (
     OfdNotFoundError,
     OfdWriteError,
 )
+from ofdreader.convert import ofd_to_pdf, ofd_to_pdf_layout
 from ofdreader.reader import OfdPage, OfdReader
 from ofdreader.writer import OfdWriter
 
@@ -17,6 +18,8 @@ __all__ = [
     "OfdReader",
     "OfdWriteError",
     "OfdWriter",
+    "ofd_to_pdf",
+    "ofd_to_pdf_layout",
 ]
 
 __version__ = "0.1.0"
